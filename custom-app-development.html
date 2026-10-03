@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="images/LedgerFirstFeture.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ledger First Custom App Development — Tell us about your dream app. We build bespoke bookkeeping and business applications tailored to your workflow.">
+<meta name="keywords" content="custom app development, bespoke bookkeeping app, Android custom app, iOS custom app, business app development">
+<meta name="author" content="Ledger First LLC">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ledger-first.com/custom-app-development.html">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Custom App Development — Ledger First">
+<meta property="og:description" content="Tell us about your dream app. We build bespoke bookkeeping and business applications tailored to your workflow.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ledger-first.com/custom-app-development.html">
+<meta property="og:image" content="https://ledger-first.com/images/LedgerFirstFeture.png">
+<meta property="og:site_name" content="Ledger First">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Custom App Development — Ledger First">
+<meta name="twitter:description" content="Tell us about your dream app. We build bespoke bookkeeping and business applications tailored to your workflow.">
+<meta name="twitter:image" content="https://ledger-first.com/images/LedgerFirstFeture.png">
+
+<title>Custom App Development — Ledger First</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #d4af37;
+    --accent2: #00d4aa;
+    --bg: #0a0a0f;
+    --fg: #f0f0f5;
+    --muted: #8899aa;
+    --card: rgba(20,20,35,0.7);
+    --cardborder: rgba(212,175,55,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family:'Outfit',sans-serif;
+    background:var(--bg);
+    color:var(--fg);
+    overflow-x:hidden;
+  }
+  #three-canvas {
+    position:fixed; top:0; left:0;
+    width:100%; height:100%;
+    z-index:0; pointer-events:none;
+  }
+  .page-wrapper { position:relative; z-index:2; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 40px; z-index:100;
+    background:linear-gradient(180deg, rgba(10,10,15,0.9) 0%, transparent 100%);
+    backdrop-filter:blur(8px);
+  }
+  nav .logo {
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700; font-size:1.4rem;
+    color:var(--accent); letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  nav .links { display:flex; gap:28px; }
+  nav .links a {
+    color:var(--fg); text-decoration:none;
+    font-size:0.85rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:1.5px;
+    position:relative; transition:color 0.3s;
+  }
+  nav .links a::after {
+    content:''; position:absolute;
+    bottom:-6px; left:0; width:0; height:2px;
+    background:var(--accent); transition:width 0.3s;
+  }
+  nav .links a:hover { color:var(--accent); }
+  nav .links a:hover::after { width:100%; }
+  nav .links a.active { color:var(--accent); }
+  nav .links a.active::after { width:100%; }
+
+  /* FLOATING NAV */
+  .floating-nav {
+    position:fixed; top:20px; right:20px; z-index:200;
+    cursor:grab; user-select:none; touch-action:none;
+  }
+  .floating-nav:active { cursor:grabbing; }
+  .floating-nav-drag-handle {
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:28px; height:4px; border-radius:2px;
+    background:rgba(212,175,55,0.5);
+    opacity:0; transition:opacity 0.3s ease;
+    pointer-events:none;
+  }
+  .floating-nav:hover .floating-nav-drag-handle { opacity:1; }
+  .floating-nav-toggle {
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), #b8960c);
+    border:none; cursor:pointer;
+    display:flex;
+    align-items:center; justify-content:center;
+    padding:0;
+    box-shadow:0 4px 20px rgba(212,175,55,0.4);
+    transition:all 0.3s ease;
+    overflow:hidden;
+  }
+  .floating-nav-toggle:hover {
+    transform:scale(1.1);
+    box-shadow:0 6px 30px rgba(212,175,55,0.6);
+  }
+  .floating-nav-toggle img {
+    width:36px; height:36px;
+    object-fit:contain;
+    border-radius:50%;
+  }
+  .floating-nav-dropdown {
+    position:absolute; top:60px; right:0;
+    background:rgba(20,20,35,0.95);
+    border:1px solid rgba(212,175,55,0.3);
+    border-radius:16px; padding:16px;
+    min-width:200px;
+    max-height:70vh;
+    overflow-y:auto;
+    backdrop-filter:blur(12px);
+    opacity:0; visibility:hidden;
+    transform:translateY(-10px);
+    transition:all 0.3s ease;
+  }
+  .floating-nav-dropdown.active {
+    opacity:1; visibility:visible;
+    transform:translateY(0);
+  }
+  .floating-nav-dropdown a {
+    display:block; padding:12px 16px;
+    color:var(--fg); text-decoration:none;
+    font-size:0.9rem; font-weight:500;
+    border-radius:10px;
+    transition:all 0.2s ease;
+  }
+  .floating-nav-dropdown a:hover {
+    background:rgba(212,175,55,0.15);
+    color:var(--accent);
+  }
+  .floating-nav-dropdown a.active {
+    color:var(--accent);
+    background:rgba(212,175,55,0.1);
+  }
+
+  /* SECTIONS */
+  section {
+    padding:100px 40px; max-width:1400px; margin:0 auto; position:relative;
+  }
+  .section-title {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(2rem, 5vw, 3.5rem);
+    font-weight:700; margin-bottom:16px;
+    text-align:center; text-transform:uppercase; letter-spacing:-1px;
+  }
+  .section-title .gold { color:var(--accent); }
+  .section-sub {
+    text-align:center; color:var(--muted); font-size:1.1rem;
+    max-width:750px; margin:0 auto 60px; font-weight:300; line-height:1.6;
+  }
+
+  /* QUESTIONNAIRE */
+  .questionnaire-card {
+    background:var(--card); border:1px solid rgba(255,255,255,0.06);
+    border-radius:24px; padding:50px; max-width:900px;
+    margin:0 auto; line-height:1.8; color:var(--muted); font-size:1.05rem;
+  }
+  .questionnaire-card h3 {
+    color:var(--fg); font-size:1.5rem; margin-bottom:8px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .questionnaire-card .intro {
+    margin-bottom:40px; color:var(--muted); font-size:1rem; line-height:1.7;
+  }
+  .form-group {
+    margin-bottom:32px;
+  }
+  .form-group label {
+    display:block; color:var(--fg); font-weight:600; font-size:0.95rem;
+    margin-bottom:10px; font-family:'Space Grotesk',sans-serif;
+  }
+  .form-group label .required {
+    color:var(--accent); margin-left:4px;
+  }
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="tel"],
+  .form-group select,
+  .form-group textarea {
+    width:100%; padding:14px 18px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:12px; color:var(--fg);
+    font-family:'Outfit',sans-serif; font-size:1rem;
+    transition:all 0.3s ease;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(212,175,55,0.15);
+  }
+  .form-group textarea {
+    min-height:120px; resize:vertical;
+  }
+  .form-group select {
+    cursor:pointer;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4af37' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 16px center;
+    padding-right:40px;
+  }
+  .form-group select option {
+    background:var(--bg); color:var(--fg);
+  }
+  .form-group .hint {
+    font-size:0.85rem; color:var(--muted); margin-top:6px; opacity:0.7;
+  }
+  .checkbox-group {
+    display:flex; flex-direction:column; gap:12px;
+    margin-top:10px;
+  }
+  .checkbox-group label {
+    display:flex; align-items:center; gap:10px;
+    font-weight:400; font-family:'Outfit',sans-serif;
+    cursor:pointer;
+  }
+  .checkbox-group input[type="checkbox"] {
+    width:18px; height:18px; accent-color:var(--accent);
+    cursor:pointer;
+  }
+
+  /* BUTTONS */
+  .btn {
+    padding:16px 40px; border-radius:999px;
+    font-family:'Outfit',sans-serif; font-weight:600; font-size:1rem;
+    text-decoration:none; letter-spacing:1px; text-transform:uppercase;
+    transition:all 0.3s ease; cursor:pointer; border:none;
+    display:inline-block;
+  }
+  .btn-primary {
+    background:linear-gradient(135deg, var(--accent), #b8960c);
+    color:#000;
+    box-shadow:0 8px 30px rgba(212,175,55,0.3);
+  }
+  .btn-primary:hover {
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 12px 40px rgba(212,175,55,0.5);
+  }
+  .submit-row {
+    text-align:center; margin-top:20px;
+  }
+
+  /* SUCCESS MESSAGE */
+  .success-message {
+    display:none;
+    background:rgba(0,212,170,0.1);
+    border:1px solid rgba(0,212,170,0.3);
+    border-radius:16px; padding:30px;
+    text-align:center; margin-top:20px;
+  }
+  .success-message.show { display:block; }
+  .success-message h4 {
+    color:var(--accent2); font-family:'Space Grotesk',sans-serif;
+    font-size:1.3rem; margin-bottom:8px;
+  }
+  .success-message p { color:var(--muted); }
+
+  /* FOOTER */
+  footer {
+    text-align:center; padding:60px 20px;
+    border-top:1px solid rgba(255,255,255,0.06);
+    color:var(--muted); font-size:0.9rem;
+  }
+  footer .big-logo {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:2rem; font-weight:700; color:var(--accent);
+    margin-bottom:16px; letter-spacing:4px;
+  }
+  .footer-links {
+    display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+    margin-bottom:24px;
+  }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+  .footer-links a:hover { color:var(--accent); }
+  .social-icons {
+    display:flex; gap:20px; justify-content:center; margin-bottom:24px;
+  }
+  .social-icons a {
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.3s ease; text-decoration:none;
+  }
+  .social-icons a:hover {
+    background:var(--accent); border-color:var(--accent);
+    transform:translateY(-3px);
+  }
+  .social-icons a:hover svg { fill:#000; }
+  .social-icons svg {
+    width:20px; height:20px; fill:var(--fg);
+    transition:fill 0.3s ease;
+  }
+
+  .scroll-reveal {
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity 0.8s ease, transform 0.8s ease;
+  }
+  .scroll-reveal.revealed {
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  @media(max-width:768px){
+    nav { padding:14px 20px; }
+    nav .links { display:none; }
+    section { padding:60px 20px; }
+    .questionnaire-card { padding:28px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-canvas"></canvas>
+
+<nav>
+  <div class="logo">Ledger First</div>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- FLOATING NAV -->
+<div class="floating-nav" id="floatingNav">
+  <div class="floating-nav-drag-handle"></div>
+  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Menu">
+    <img src="images/LedgerFirstFeture.png" alt="Menu">
+  </button>
+  <div class="floating-nav-dropdown" id="floatingNavDropdown">
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="android.html">Android Apps</a>
+    <a href="ios.html">iOS Apps</a>
+    <a href="services.html">Services</a>
+    <a href="custom-app-development.html" class="active">Custom App</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="partner.html">Partner</a>
+    <a href="resale.html">Resale</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="funding.html">Funding</a>
+    <a href="next-rollout.html">Next Rollout</a>
+    <a href="shorts.html">Shorts</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- QUESTIONNAIRE -->
+  <section id="questionnaire">
+    <h2 class="section-title"><span class="gold">Custom App</span> Development</h2>
+    <p class="section-sub">Tell us about your dream app. We will build a bespoke solution tailored to your business workflow.</p>
+
+    <div class="questionnaire-card scroll-reveal">
+      <h3>Project Questionnaire</h3>
+      <p class="intro">Please answer the questions below in as much detail as possible. The more we know about your vision, the better we can bring it to life. Fields marked with <span class="required">*</span> are required.</p>
+
+      <form id="custom-app-form" action="https://formsubmit.co/ledgerfirstmail@gmail.com" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="New Custom App Development Inquiry">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="source" value="custom-app-development-page">
+
+        <!-- Contact Info -->
+        <div class="form-group">
+          <label for="fullName">Full Name <span class="required">*</span></label>
+          <input type="text" id="fullName" name="full_name" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address <span class="required">*</span></label>
+          <input type="email" id="email" name="email" placeholder="john@company.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+        </div>
+
+        <div class="form-group">
+          <label for="company">Business / Organization Name <span class="required">*</span></label>
+          <input type="text" id="company" name="company_name" placeholder="Acme Inc." required>
+        </div>
+
+        <!-- App Type -->
+        <div class="form-group">
+          <label for="appType">What type of app are you looking to build? <span class="required">*</span></label>
+          <select id="appType" name="app_type" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="bookkeeping">Bookkeeping / Accounting</option>
+            <option value="inventory">Inventory / Warehouse Management</option>
+            <option value="crm">CRM / Customer Management</option>
+            <option value="pos">Point of Sale (POS)</option>
+            <option value="payroll">Payroll / HR</option>
+            <option value="analytics">Business Analytics / Dashboard</option>
+            <option value="multi">Multi-purpose Business Suite</option>
+            <option value="other">Other (describe below)</option>
+          </select>
+        </div>
+
+        <!-- Platform -->
+        <div class="form-group">
+          <label>Target Platform(s) <span class="required">*</span></label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="platform" value="Android"> Android</label>
+            <label><input type="checkbox" name="platform" value="iOS"> iOS</label>
+            <label><input type="checkbox" name="platform" value="Web"> Web / Browser</label>
+            <label><input type="checkbox" name="platform" value="Desktop"> Desktop (Windows / Mac)</label>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="description">Describe your app idea in detail. What problem does it solve? <span class="required">*</span></label>
+          <textarea id="description" name="app_description" placeholder="We need an app that lets our field technicians log expenses, capture receipt photos, and sync with our main accounting system in real-time..." required></textarea>
+          <p class="hint">Include the core purpose, target users, and any unique features you have in mind.</p>
+        </div>
+
+        <!-- Current Workflow -->
+        <div class="form-group">
+          <label for="workflow">Describe your current workflow and the pain points you are experiencing. <span class="required">*</span></label>
+          <textarea id="workflow" name="current_workflow" placeholder="Right now we use spreadsheets and paper receipts. It takes 3 days to reconcile expenses, and we often lose receipts..." required></textarea>
+          <p class="hint">What tools do you currently use? Where does the process break down?</p>
+        </div>
+
+        <!-- Key Features -->
+        <div class="form-group">
+          <label for="features">List the key features and functionality you need. <span class="required">*</span></label>
+          <textarea id="features" name="key_features" placeholder="- Offline data entry with sync when connected&#10;- Photo capture for receipts and invoices&#10;- Multi-user support with role-based permissions&#10;- Export to PDF and Excel&#10;- Push notifications for overdue tasks..." required></textarea>
+          <p class="hint">Be as specific as possible. Prioritize must-haves vs nice-to-haves if you can.</p>
+        </div>
+
+        <!-- Integrations -->
+        <div class="form-group">
+          <label for="integrations">Do you need integrations with other software or services?</label>
+          <textarea id="integrations" name="integrations" placeholder="QuickBooks Online, Stripe payments, Google Drive, existing REST API, etc."></textarea>
+          <p class="hint">List any third-party tools, APIs, or databases the app needs to connect with.</p>
+        </div>
+
+        <!-- Design Preferences -->
+        <div class="form-group">
+          <label for="design">Do you have any design or branding requirements?</label>
+          <textarea id="design" name="design_requirements" placeholder="We have a brand style guide with specific colors and fonts. We prefer a dark mode interface..."></textarea>
+          <p class="hint">Colors, themes, accessibility needs, or existing brand guidelines.</p>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+          <label for="budget">What is your approximate budget range?</label>
+          <select id="budget" name="budget_range">
+            <option value="" disabled selected>Select a range</option>
+            <option value="under-5k">Under $5,000</option>
+            <option value="5k-10k">$5,000 – $10,000</option>
+            <option value="10k-25k">$10,000 – $25,000</option>
+            <option value="25k-50k">$25,000 – $50,000</option>
+            <option value="50k+">$50,000+</option>
+            <option value="discuss">Prefer to discuss</option>
+          </select>
+        </div>
+
+        <!-- Timeline -->
+        <div class="form-group">
+          <label for="timeline">What is your desired timeline for completion?</label>
+          <select id="timeline" name="timeline">
+            <option value="" disabled selected>Select a timeline</option>
+            <option value="1-month">Within 1 month</option>
+            <option value="1-3-months">1 – 3 months</option>
+            <option value="3-6-months">3 – 6 months</option>
+            <option value="6-12-months">6 – 12 months</option>
+            <option value="flexible">Flexible / No rush</option>
+          </select>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="form-group">
+          <label for="notes">Anything else we should know?</label>
+          <textarea id="notes" name="additional_notes" placeholder="Security requirements, compliance needs (HIPAA, SOC2), specific devices your team uses, etc."></textarea>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" class="btn btn-primary">Submit Project Request</button>
+        </div>
+      </form>
+
+      <div class="success-message" id="successMessage">
+        <h4>✅ Request Submitted!</h4>
+        <p>Thank you for reaching out. Our team will review your project details and get back to you within 24–48 business hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="big-logo">LEDGER FIRST</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="partner.html">Partner</a>
+      <a href="resale.html">Resale</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="funding.html">Funding</a>
+      <a href="next-rollout.html">Next Rollout</a>
+      <a href="shorts.html">Shorts</a>
+      <a href="opt-in.html">Opt-In</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+    </div>
+    <div class="social-icons">
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 12 8.56v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    </div>
+    <p>© 2026 Ledger First LLC. All rights reserved.</p>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  /* THREE.JS BACKGROUND */
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const geometry = new THREE.IcosahedronGeometry(1.8, 0);
+  const material = new THREE.MeshBasicMaterial({ color: 0xd4af37, wireframe: true, transparent: true, opacity: 0.15 });
+  const shape = new THREE.Mesh(geometry, material);
+  scene.add(shape);
+
+  const particlesGeo = new THREE.BufferGeometry();
+  const particlesCount = 600;
+  const posArray = new Float32Array(particlesCount * 3);
+  for(let i=0; i<particlesCount*3; i++) posArray[i] = (Math.random() - 0.5) * 12;
+  particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+  const particlesMat = new THREE.PointsMaterial({ size: 0.015, color: 0x00d4aa, transparent: true, opacity: 0.6 });
+  const particles = new THREE.Points(particlesGeo, particlesMat);
+  scene.add(particles);
+
+  camera.position.z = 4;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    shape.rotation.x += 0.0015;
+    shape.rotation.y += 0.0025;
+    particles.rotation.y += 0.0003;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  /* SCROLL REVEAL */
+  const revealEls = document.querySelectorAll('.scroll-reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('revealed'); });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* FLOATING NAV */
+  const floatingNav = document.getElementById('floatingNav');
+  const floatingNavToggle = document.getElementById('floatingNavToggle');
+  const floatingNavDropdown = document.getElementById('floatingNavDropdown');
+  let isDragging = false, hasMoved = false, startX, startY, initialLeft, initialTop;
+
+  const savedPos = localStorage.getItem('floatingNavPos');
+  if(savedPos) {
+    const pos = JSON.parse(savedPos);
+    floatingNav.style.left = pos.left + 'px';
+    floatingNav.style.top = pos.top + 'px';
+    floatingNav.style.right = 'auto';
+  }
+
+  floatingNav.addEventListener('mousedown', (e) => {
+    if(e.target.closest('.floating-nav-dropdown')) return;
+    isDragging = true; hasMoved = false;
+    startX = e.clientX; startY = e.clientY;
+    const rect = floatingNav.getBoundingClientRect();
+    initialLeft = rect.left; initialTop = rect.top;
+    floatingNav.style.right = 'auto';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if(!isDragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    if(Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true;
+    floatingNav.style.left = Math.max(0, Math.min(window.innerWidth - 48, initialLeft + dx)) + 'px';
+    floatingNav.style.top = Math.max(0, Math.min(window.innerHeight - 48, initialTop + dy)) + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if(isDragging) {
+      const rect = floatingNav.getBoundingClientRect();
+      localStorage.setItem('floatingNavPos', JSON.stringify({ left: rect.left, top: rect.top }));
+    }
+    isDragging = false;
+  });
+  floatingNavToggle.addEventListener('click', () => {
+    if(!hasMoved) {
+      floatingNavToggle.classList.toggle('active');
+      floatingNavDropdown.classList.toggle('active');
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if(!floatingNav.contains(e.target)) {
+      floatingNavToggle.classList.remove('active');
+      floatingNavDropdown.classList.remove('active');
+    }
+  });
+
+  /* FORM SUCCESS */
+  const form = document.getElementById('custom-app-form');
+  const successMsg = document.getElementById('successMessage');
+  if(window.location.search.includes('submitted=true') || window.location.search.includes('_subject')) {
+    form.style.display = 'none';
+    successMsg.classList.add('show');
+  }
+</script>
+</body>
+</html>

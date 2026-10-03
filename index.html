@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="images/LedgerFirstFeture.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ledger First LLC — Powerful bookkeeping apps for entrepreneurs. Android &amp; iOS apps, services, and tools to manage your business finances.">
+<meta name="keywords" content="bookkeeping apps, small business accounting, entrepreneur tools, Ledger First, Android bookkeeping, iOS bookkeeping, business finance">
+<meta name="author" content="Ledger First LLC">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://ledger-first.com/index.html">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Ledger First — Bookkeeping Apps for Entrepreneurs">
+<meta property="og:description" content="Powerful bookkeeping apps and services to manage your business finances.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ledger-first.com">
+<meta property="og:image" content="https://ledger-first.com/images/LedgerFirstFeture.png">
+<meta property="og:site_name" content="Ledger First">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ledger First — Bookkeeping Apps for Entrepreneurs">
+<meta name="twitter:description" content="Powerful bookkeeping apps and services to manage your business finances.">
+<meta name="twitter:image" content="https://ledger-first.com/images/LedgerFirstFeture.png">
+
+<title>Ledger First — 3D Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #d4af37;
+    --accent2: #00d4aa;
+    --bg: #0a0a0f;
+    --fg: #f0f0f5;
+    --muted: #8899aa;
+    --card: rgba(20,20,35,0.7);
+    --cardborder: rgba(212,175,55,0.2);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family:'Outfit',sans-serif;
+    background:var(--bg);
+    color:var(--fg);
+    overflow-x:hidden;
+  }
+  #three-canvas {
+    position:fixed; top:0; left:0;
+    width:100%; height:100%;
+    z-index:0; pointer-events:none;
+  }
+  .page-wrapper { position:relative; z-index:2; }
+
+  /* NAV */
+  nav {
+    position:fixed; top:0; left:0; right:0;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 40px; z-index:100;
+    background:linear-gradient(180deg, rgba(10,10,15,0.9) 0%, transparent 100%);
+    backdrop-filter:blur(8px);
+  }
+  nav .logo {
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700; font-size:1.4rem;
+    color:var(--accent); letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  nav .links { display:flex; gap:28px; }
+  nav .links a {
+    color:var(--fg); text-decoration:none;
+    font-size:0.85rem; font-weight:500;
+    text-transform:uppercase; letter-spacing:1.5px;
+    position:relative; transition:color 0.3s;
+  }
+  nav .links a::after {
+    content:''; position:absolute;
+    bottom:-6px; left:0; width:0; height:2px;
+    background:var(--accent); transition:width 0.3s;
+  }
+  nav .links a:hover { color:var(--accent); }
+  nav .links a:hover::after { width:100%; }
+  nav .links a.active { color:var(--accent); }
+  nav .links a.active::after { width:100%; }
+
+  /* FLOATING NAV */
+  .floating-nav {
+    position:fixed; top:20px; right:20px; z-index:200;
+    cursor:grab; user-select:none; touch-action:none;
+  }
+  .floating-nav:active { cursor:grabbing; }
+  .floating-nav-drag-handle {
+    position:absolute; top:-6px; left:50%; transform:translateX(-50%);
+    width:28px; height:4px; border-radius:2px;
+    background:rgba(212,175,55,0.5);
+    opacity:0; transition:opacity 0.3s ease;
+    pointer-events:none;
+  }
+  .floating-nav:hover .floating-nav-drag-handle { opacity:1; }
+  .floating-nav-toggle {
+    width:48px; height:48px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), #b8960c);
+    border:none; cursor:pointer;
+    display:flex;
+    align-items:center; justify-content:center;
+    padding:0;
+    box-shadow:0 4px 20px rgba(212,175,55,0.4);
+    transition:all 0.3s ease;
+    overflow:hidden;
+  }
+  .floating-nav-toggle:hover {
+    transform:scale(1.1);
+    box-shadow:0 6px 30px rgba(212,175,55,0.6);
+  }
+  .floating-nav-toggle img {
+    width:36px; height:36px;
+    object-fit:contain;
+    border-radius:50%;
+  }
+  .floating-nav-dropdown {
+    position:absolute; top:60px; right:0;
+    background:rgba(20,20,35,0.95);
+    border:1px solid rgba(212,175,55,0.3);
+    border-radius:16px; padding:16px;
+    min-width:200px;
+    max-height:70vh;
+    overflow-y:auto;
+    backdrop-filter:blur(12px);
+    opacity:0; visibility:hidden;
+    transform:translateY(-10px);
+    transition:all 0.3s ease;
+  }
+  .floating-nav-dropdown.active {
+    opacity:1; visibility:visible;
+    transform:translateY(0);
+  }
+  .floating-nav-dropdown a {
+    display:block; padding:12px 16px;
+    color:var(--fg); text-decoration:none;
+    font-size:0.9rem; font-weight:500;
+    border-radius:10px;
+    transition:all 0.2s ease;
+  }
+  .floating-nav-dropdown a:hover {
+    background:rgba(212,175,55,0.15);
+    color:var(--accent);
+  }
+  .floating-nav-dropdown a.active {
+    color:var(--accent);
+    background:rgba(212,175,55,0.1);
+  }
+
+  /* HERO */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center;
+    padding:120px 20px 80px;
+    position:relative;
+  }
+  .hero h1 {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(3rem, 8vw, 7rem);
+    font-weight:900; line-height:1.0;
+    background:linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    background-clip:text;
+    margin-bottom:20px; text-transform:uppercase; letter-spacing:-2px;
+  }
+  .hero .sub {
+    font-size:clamp(1rem, 2.5vw, 1.5rem);
+    color:var(--muted); max-width:800px;
+    margin-bottom:40px; font-weight:300;
+    line-height:1.5;
+  }
+  .hero-btns { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+  .btn {
+    padding:14px 32px; border-radius:999px;
+    font-family:'Outfit',sans-serif; font-weight:600; font-size:0.9rem;
+    text-decoration:none; letter-spacing:1px; text-transform:uppercase;
+    transition:all 0.3s ease; cursor:pointer; border:none;
+    display:inline-block;
+  }
+  .btn-primary {
+    background:linear-gradient(135deg, var(--accent), #b8960c);
+    color:#000;
+    box-shadow:0 8px 30px rgba(212,175,55,0.3);
+  }
+  .btn-primary:hover {
+    transform:translateY(-3px) scale(1.03);
+    box-shadow:0 12px 40px rgba(212,175,55,0.5);
+  }
+  .btn-ghost {
+    border:1px solid rgba(255,255,255,0.2); color:var(--fg); background:transparent;
+  }
+  .btn-ghost:hover {
+    border-color:var(--accent); color:var(--accent); transform:translateY(-3px);
+  }
+
+  /* SECTIONS */
+  section {
+    padding:100px 40px; max-width:1400px; margin:0 auto; position:relative;
+  }
+  .section-title {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(2rem, 5vw, 3.5rem);
+    font-weight:700; margin-bottom:16px;
+    text-align:center; text-transform:uppercase; letter-spacing:-1px;
+  }
+  .section-title .gold { color:var(--accent); }
+  .section-sub {
+    text-align:center; color:var(--muted); font-size:1.1rem;
+    max-width:750px; margin:0 auto 60px; font-weight:300; line-height:1.6;
+  }
+
+  /* SHOWCASE CARD */
+  .showcase-section {
+    padding:80px 40px;
+  }
+  .showcase-card {
+    background:var(--card); border:1px solid var(--cardborder);
+    border-radius:24px; padding:40px;
+    max-width:600px; margin:0 auto;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    transition:all 0.5s ease;
+  }
+  .showcase-card:hover {
+    border-color:rgba(212,175,55,0.5);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.1);
+  }
+  .showcase-card img {
+    width:100%; height:220px;
+    object-fit:contain;
+    border-radius:16px;
+    margin-bottom:20px;
+    background:rgba(255,255,255,0.03);
+    transition:opacity 0.5s ease;
+  }
+  .showcase-card h3 {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.5rem; color:var(--fg); margin-bottom:10px;
+    transition:opacity 0.5s ease;
+  }
+  .showcase-card p {
+    color:var(--muted); font-size:0.95rem; line-height:1.6;
+    margin-bottom:20px;
+    min-height:48px;
+    transition:opacity 0.5s ease;
+  }
+  .showcase-card .tag {
+    display:inline-block; margin-right:8px;
+    padding:6px 14px; border-radius:20px;
+    font-size:0.7rem; font-weight:600;
+    text-transform:uppercase; letter-spacing:1px;
+    background:rgba(0,212,170,0.12); color:var(--accent2);
+    border:1px solid rgba(0,212,170,0.2);
+  }
+  .showcase-card .tag.price {
+    background:rgba(212,175,55,0.15); color:var(--accent);
+    border-color:rgba(212,175,55,0.3);
+  }
+  .showcase-card .tag.free {
+    background:rgba(0,212,170,0.2); color:var(--accent2);
+    border-color:rgba(0,212,170,0.4);
+  }
+  .showcase-nav {
+    display:flex; justify-content:center; gap:12px; margin-top:24px;
+  }
+  .showcase-nav button {
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    color:var(--fg); font-size:1.2rem;
+    cursor:pointer; transition:all 0.3s ease;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .showcase-nav button:hover {
+    background:var(--accent); border-color:var(--accent); color:#000;
+  }
+  .showcase-dots {
+    display:flex; justify-content:center; gap:8px; margin-top:16px;
+  }
+  .showcase-dots .dot {
+    width:8px; height:8px; border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    cursor:pointer; transition:all 0.3s ease;
+  }
+  .showcase-dots .dot.active {
+    background:var(--accent); width:24px; border-radius:4px;
+  }
+  .showcase-dots .dot:hover {
+    background:rgba(212,175,55,0.6);
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-section {
+    padding: 80px 40px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(0,212,170,0.03) 100%);
+    border-top:1px solid rgba(212,175,55,0.1);
+    border-bottom:1px solid rgba(212,175,55,0.1);
+  }
+  .testimonials-section .section-title {
+    margin-bottom: 10px;
+  }
+  .testimonials-section .section-sub {
+    margin-bottom: 50px;
+  }
+  .testimonial-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .testimonial {
+    background: rgba(20,20,35,0.8); padding: 30px; border-radius: 16px;
+    border: 1px solid rgba(212,175,55,0.15);
+    transition:all 0.4s ease;
+  }
+  .testimonial:hover {
+    border-color:var(--accent);
+    transform:translateY(-4px);
+  }
+  .testimonial .stars {
+    color: var(--accent); font-size: 1.5rem; margin-bottom: 15px;
+  }
+  .testimonial p {
+    font-style: italic; line-height: 1.6; margin-bottom: 20px; color:var(--muted);
+  }
+  .testimonial .author {
+    display: flex; align-items: center; gap: 15px;
+  }
+  .testimonial .author-avatar {
+    width: 50px; height: 50px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--bg);
+  }
+  .testimonial .author-name {
+    font-weight: 600; color: var(--fg);
+  }
+  .testimonial .author-title {
+    font-size: 0.85rem; color: var(--muted);
+  }
+
+  /* PARALLAX */
+  .parallax-banner {
+    height:40vh; display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    background:radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 60%);
+    border-top:1px solid rgba(212,175,55,0.1);
+    border-bottom:1px solid rgba(212,175,55,0.1);
+    position:relative;
+  }
+  .parallax-banner h2 {
+    font-size:clamp(1.5rem, 4vw, 2.5rem); font-weight:700;
+    max-width:900px; line-height:1.3; padding:0 20px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align:center; padding:60px 20px;
+    border-top:1px solid rgba(255,255,255,0.06);
+    color:var(--muted); font-size:0.9rem;
+  }
+  footer .big-logo {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:2rem; font-weight:700; color:var(--accent);
+    margin-bottom:16px; letter-spacing:4px;
+  }
+  .footer-links {
+    display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+    margin-bottom:24px;
+  }
+  .footer-links a { color:var(--muted); text-decoration:none; font-size:0.85rem; }
+  .footer-links a:hover { color:var(--accent); }
+  .social-icons {
+    display:flex; gap:20px; justify-content:center; margin-bottom:24px;
+  }
+  .social-icons a {
+    width:44px; height:44px; border-radius:50%;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    display:flex; align-items:center; justify-content:center;
+    transition:all 0.3s ease; text-decoration:none;
+  }
+  .social-icons a:hover {
+    background:var(--accent); border-color:var(--accent);
+    transform:translateY(-3px);
+  }
+  .social-icons a:hover svg { fill:#000; }
+  .social-icons svg {
+    width:20px; height:20px; fill:var(--fg);
+    transition:fill 0.3s ease;
+  }
+
+  /* SMS OPT-IN CARD */
+  .sms-optin-section {
+    padding:80px 40px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(0,212,170,0.04) 100%);
+    border-top:1px solid rgba(212,175,55,0.1);
+  }
+  .sms-optin-card {
+    background:var(--card); border:1px solid var(--cardborder);
+    border-radius:24px; padding:48px;
+    max-width:640px; margin:0 auto;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    transition:all 0.5s ease;
+  }
+  .sms-optin-card:hover {
+    border-color:rgba(212,175,55,0.5);
+    box-shadow:0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(212,175,55,0.1);
+  }
+  .sms-optin-card .sms-icon {
+    font-size:3rem; margin-bottom:16px;
+  }
+  .sms-optin-card h3 {
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1.6rem; color:var(--fg); margin-bottom:10px;
+  }
+  .sms-optin-card .sms-sub {
+    color:var(--muted); font-size:0.95rem; line-height:1.6;
+    margin-bottom:28px;
+  }
+  .sms-optin-card form {
+    display:flex; flex-direction:column; gap:16px;
+    max-width:420px; margin:0 auto;
+  }
+  .sms-optin-card input[type="tel"] {
+    padding:14px 20px; border-radius:12px;
+    border:1px solid rgba(255,255,255,0.1);
+    background:rgba(255,255,255,0.03);
+    color:var(--fg); font-family:'Outfit',sans-serif; font-size:1rem;
+    outline:none; transition:all 0.3s ease;
+  }
+  .sms-optin-card input[type="tel"]:focus {
+    border-color:var(--accent);
+    box-shadow:0 0 20px rgba(212,175,55,0.15);
+  }
+  .sms-optin-card input[type="tel"]::placeholder {
+    color:var(--muted);
+  }
+  .sms-optin-card .consent-row {
+    display:flex; align-items:flex-start; gap:12px;
+    text-align:left; padding:8px 4px;
+  }
+  .sms-optin-card .consent-row input[type="checkbox"] {
+    width:18px; height:18px; margin-top:2px;
+    accent-color:var(--accent); cursor:pointer;
+    flex-shrink:0;
+  }
+  .sms-optin-card .consent-row label {
+    font-size:0.82rem; color:var(--muted); line-height:1.5; cursor:pointer;
+  }
+  .sms-optin-card .consent-row label a {
+    color:var(--accent); text-decoration:underline;
+  }
+  .sms-optin-card .consent-row label a:hover {
+    color:var(--accent2);
+  }
+  .sms-optin-card .sms-disclosure {
+    font-size:0.75rem; color:var(--muted); line-height:1.6;
+    text-align:left; padding:12px 16px;
+    background:rgba(255,255,255,0.02);
+    border-radius:10px; border:1px solid rgba(255,255,255,0.05);
+    margin-top:4px;
+  }
+  .sms-optin-card .sms-disclosure strong {
+    color:var(--fg); font-weight:600;
+  }
+  .sms-optin-card .sms-success {
+    display:none;
+    padding:20px; border-radius:12px;
+    background:rgba(0,212,170,0.1); border:1px solid rgba(0,212,170,0.3);
+    color:var(--accent2); font-weight:600;
+  }
+  .sms-optin-card .sms-error {
+    display:none;
+    padding:12px 16px; border-radius:8px;
+    background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.3);
+    color:#ff6b6b; font-size:0.85rem;
+  }
+
+  /* Scroll reveal */
+  .scroll-reveal {
+    opacity:0;
+    transform:translateY(40px);
+    transition:opacity 0.8s ease, transform 0.8s ease;
+  }
+  .scroll-reveal.revealed {
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  @media(max-width:768px){
+    nav { padding:14px 20px; }
+    nav .links { display:none; }
+    section { padding:60px 20px; }
+    .showcase-section { padding:60px 20px; }
+    .testimonials-section { padding:60px 20px; }
+    .showcase-card { padding:28px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="three-canvas"></canvas>
+
+<nav>
+  <div class="logo">Ledger First</div>
+  <div class="links">
+    <a href="index.html" class="active">Home</a>
+    <a href="products.html">Products</a>
+    <a href="services.html">Services</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- FLOATING NAV -->
+<div class="floating-nav" id="floatingNav">
+  <div class="floating-nav-drag-handle"></div>
+  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Menu">
+    <img src="images/LedgerFirstFeture.png" alt="Menu">
+  </button>
+  <div class="floating-nav-dropdown" id="floatingNavDropdown">
+    <a href="index.html" class="active">Home</a>
+    <a href="products.html">Products</a>
+    <a href="android.html">Android Apps</a>
+    <a href="ios.html">iOS Apps</a>
+    <a href="services.html">Services</a>
+    <a href="custom-app-development.html">Custom App</a>
+    <a href="call-out-buddy.html">Call Out Buddy</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="partner.html">Partner</a>
+    <a href="resale.html">Resale</a>
+    <a href="faqs.html">FAQs</a>
+    <a href="funding.html">Funding</a>
+    <a href="next-rollout.html">Next Rollout</a>
+    <a href="shorts.html">Shorts</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="terms.html">Terms</a>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <h1>Ledger First</h1>
+    <p class="sub">In an era defined by digital innovation, the fundamental language of power and stability remains unchanged: it is the language of finance. Ledger First is a pioneering bookkeeping and accounting application development company. We specialize in designing intuitive, powerful, and accessible bookkeeping apps for Android, iOS, and the Web. Our singular, unwavering mission: to promote financial literacy across the world.</p>
+    <div class="hero-btns">
+      <a href="products.html" class="btn btn-primary">Explore Apps</a>
+      <a href="contact.html" class="btn btn-ghost">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- PARALLAX BANNER -->
+  <div class="parallax-banner">
+    <h2>"When you understand your finances,<br>you make better decisions &mdash; and better decisions lead to real growth."</h2>
+  </div>
+
+  <!-- APP SHOWCASE CAROUSEL -->
+  <section class="showcase-section" id="apps">
+    <h2 class="section-title"><span class="gold">Featured</span> Apps</h2>
+    <p class="section-sub">Swipe through our powerful bookkeeping apps built for every workflow.</p>
+
+    <div class="showcase-card" id="showcaseCard" style="transition:opacity 0.4s ease, transform 0.4s ease;">
+      <img src="" alt="" id="showcaseImg" loading="lazy">
+      <h3 id="showcaseTitle"></h3>
+      <p id="showcaseDesc"></p>
+      <div id="showcaseTags"></div>
+      <a href="" class="btn btn-primary" id="showcaseBtn" style="margin-top:16px;">Learn More</a>
+    </div>
+
+    <div class="showcase-nav">
+      <button id="showcasePrev" aria-label="Previous">&#8249;</button>
+      <button id="showcaseNext" aria-label="Next">&#8250;</button>
+    </div>
+    <div class="showcase-dots" id="showcaseDots"></div>
+  </section>
+
+  <!-- CUSTOM APP DEVELOPMENT -->
+  <section id="custom-app" style="padding:80px 40px;">
+    <div style="background:var(--card); border:1px solid var(--cardborder); border-radius:24px; padding:50px; max-width:900px; margin:0 auto; text-align:center;">
+      <div style="font-size:3rem; margin-bottom:16px;">💻</div>
+      <h3 style="font-family:'Space Grotesk',sans-serif; font-size:1.8rem; color:var(--fg); margin-bottom:12px;">Custom App Development</h3>
+      <p style="color:var(--muted); font-size:1.05rem; line-height:1.7; max-width:600px; margin:0 auto 24px;">Have a unique bookkeeping or business workflow? We build bespoke Android, iOS, and Web applications tailored to your exact requirements.</p>
+      <a href="custom-app-development.html" class="btn btn-primary">Start Your Project</a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section">
+    <h2 class="section-title"><span class="gold">What Our</span> Clients Say</h2>
+    <p class="section-sub">Real businesses, real results.</p>
+    
+    <div class="testimonial-grid">
+      <div class="testimonial scroll-reveal">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>"Call Out Buddy has completely transformed how we handle employee absences. No more confusion, no more missed calls. Everything is documented and verified automatically."</p>
+        <div class="author">
+          <div class="author-avatar">SM</div>
+          <div>
+            <div class="author-name">Sarah Mitchell</div>
+            <div class="author-title">HR Director, TechFlow Inc.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial scroll-reveal">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>"The QR code system is genius. Our employees love how easy it is to report absences, and I love that every call-out is verified with a confirmation call."</p>
+        <div class="author">
+          <div class="author-avatar" style="background:linear-gradient(135deg, var(--accent2), var(--accent));">JR</div>
+          <div>
+            <div class="author-name">James Rodriguez</div>
+            <div class="author-title">Operations Manager, RetailMax</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial scroll-reveal">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>"We've reduced scheduling chaos by 90% since implementing Call Out Buddy. The instant notifications mean we can find coverage before it's a crisis."</p>
+        <div class="author">
+          <div class="author-avatar" style="background:linear-gradient(135deg, var(--accent), #ff6b6b);">LC</div>
+          <div>
+            <div class="author-name">Lisa Chen</div>
+            <div class="author-title">Owner, Chen's Bistro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="big-logo">LEDGER FIRST</div>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/profile.php?id=61589240136764" target="_blank" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://x.com/ledger1st" target="_blank" aria-label="Twitter">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/ledgerfirst" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="android.html">Android Apps</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About</a>
+      <a href="partner.html">Partner</a>
+      <a href="resale.html">Resale</a>
+      <a href="faqs.html">FAQs</a>
+      <a href="funding.html">Funding</a>
+      <a href="next-rollout.html">Next Rollout</a>
+      <a href="shorts.html">Shorts</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="opt-in.html">Opt-In</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <p>&#169; 2025-2026 Ledger First LLC. All rights reserved. | Designed by Ledger First</p>
+  </footer>
+
+</div>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.z = 30;
+
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 2500;
+  const pos = new Float32Array(starCount*3);
+  for(let i=0;i<starCount;i++){
+    pos[i*3]=(Math.random()-0.5)*200;
+    pos[i*3+1]=(Math.random()-0.5)*200;
+    pos[i*3+2]=(Math.random()-0.5)*100-20;
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const starMat = new THREE.PointsMaterial({
+    color:0xd4af37, size:0.15, transparent:true, opacity:0.8, blending:THREE.AdditiveBlending
+  });
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
+
+  const shapes = [];
+  const shapeGeo = new THREE.IcosahedronGeometry(0.6, 0);
+  const shapeMat = new THREE.MeshBasicMaterial({
+    color:0xd4af37, wireframe:true, transparent:true, opacity:0.25
+  });
+  for(let i=0;i<30;i++){
+    const mesh = new THREE.Mesh(shapeGeo, shapeMat);
+    mesh.position.set((Math.random()-0.5)*60,(Math.random()-0.5)*60,(Math.random()-0.5)*40-10);
+    mesh.userData = {
+      rotX:(Math.random()-0.5)*0.02,
+      rotY:(Math.random()-0.5)*0.02,
+      floatSpeed:0.2+Math.random()*0.5,
+      floatOffset:Math.random()*Math.PI*2
+    };
+    scene.add(mesh); shapes.push(mesh);
+  }
+
+  const ringGroup = new THREE.Group();
+  const ringMat = new THREE.MeshBasicMaterial({color:0x00d4aa, wireframe:true, transparent:true, opacity:0.06});
+  for(let i=0;i<3;i++){
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(8+i*5, 0.05, 16, 100), ringMat);
+    ring.rotation.x = Math.random()*Math.PI;
+    ring.rotation.y = Math.random()*Math.PI;
+    ring.userData = {spin:(Math.random()-0.5)*0.005};
+    ringGroup.add(ring);
+  }
+  scene.add(ringGroup);
+
+  let mouseX=0, mouseY=0;
+  document.addEventListener('mousemove', e=>{
+    mouseX = (e.clientX/window.innerWidth - 0.5)*2;
+    mouseY = (e.clientY/window.innerHeight - 0.5)*2;
+  });
+  let scrollY = 0;
+  window.addEventListener('scroll', ()=>{ scrollY = window.scrollY; });
+
+  function animate(){
+    requestAnimationFrame(animate);
+    camera.position.x += (mouseX*3 - camera.position.x)*0.02;
+    camera.position.y += (-mouseY*3 - camera.position.y)*0.02;
+    camera.lookAt(0, -scrollY*0.005, 0);
+    stars.rotation.y += 0.0003;
+    stars.rotation.x += 0.0001;
+    const t = Date.now()*0.001;
+    shapes.forEach(s=>{
+      s.rotation.x += s.userData.rotX;
+      s.rotation.y += s.userData.rotY;
+      s.position.y += Math.sin(t*s.userData.floatSpeed + s.userData.floatOffset)*0.003;
+    });
+    ringGroup.children.forEach(r=>{
+      r.rotation.x += r.userData.spin;
+      r.rotation.y += r.userData.spin*0.7;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+</script>
+
+<!-- SCROLL REVEAL -->
+<script>
+(function(){
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, {threshold:0.1});
+  document.querySelectorAll('.scroll-reveal').forEach(el=>{
+    el.classList.add('scroll-reveal');
+    observer.observe(el);
+  });
+})();
+</script>
+
+<!-- FLOATING NAV JS -->
+<script>
+(function(){
+  var nav = document.getElementById('floatingNav');
+  var toggle = document.getElementById('floatingNavToggle');
+  var dropdown = document.getElementById('floatingNavDropdown');
+  var isDragging = false;
+  var startX, startY, initialLeft, initialTop;
+  var hasMoved = false;
+
+  // Restore saved position
+  var saved = localStorage.getItem('floatingNavPos');
+  if (saved) {
+    var pos = JSON.parse(saved);
+    nav.style.left = pos.left + 'px';
+    nav.style.top = pos.top + 'px';
+    nav.style.right = 'auto';
+  }
+
+  function onPointerDown(e) {
+    if (e.target.closest('.floating-nav-dropdown')) return;
+    isDragging = true;
+    hasMoved = false;
+    var rect = nav.getBoundingClientRect();
+    var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+    var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+    startX = clientX;
+    startY = clientY;
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    nav.style.cursor = 'grabbing';
+    e.preventDefault();
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+    var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+    var dx = clientX - startX;
+    var dy = clientY - startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true;
+    var newLeft = initialLeft + dx;
+    var newTop = initialTop + dy;
+    var maxW = window.innerWidth - nav.offsetWidth;
+    var maxH = window.innerHeight - nav.offsetHeight;
+    newLeft = Math.max(0, Math.min(newLeft, maxW));
+    newTop = Math.max(0, Math.min(newTop, maxH));
+    nav.style.left = newLeft + 'px';
+    nav.style.top = newTop + 'px';
+    nav.style.right = 'auto';
+  }
+
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    nav.style.cursor = 'grab';
+    var rect = nav.getBoundingClientRect();
+    localStorage.setItem('floatingNavPos', JSON.stringify({left: rect.left, top: rect.top}));
+  }
+
+  nav.addEventListener('mousedown', onPointerDown);
+  nav.addEventListener('touchstart', onPointerDown, {passive: false});
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('touchmove', onPointerMove, {passive: false});
+  window.addEventListener('mouseup', onPointerUp);
+  window.addEventListener('touchend', onPointerUp);
+
+  toggle.addEventListener('click', function(e) {
+    if (hasMoved) { e.stopPropagation(); return; }
+    e.stopPropagation();
+    toggle.classList.toggle('active');
+    dropdown.classList.toggle('active');
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+      toggle.classList.remove('active');
+      dropdown.classList.remove('active');
+    }
+  });
+})();
+</script>
+
+</body></html>
+<div id="music-toggle" style="position:fixed; bottom:20px; left:20px; z-index:1000; background:rgba(20,20,35,0.8); border:1px solid rgba(212,175,55,0.3); border-radius:50px; padding:10px 16px; cursor:pointer; display:flex; align-items:center; gap:8px; font-size:13px; color:var(--accent); transition:all 0.3s; backdrop-filter:blur(8px);">
+  <span id="music-icon">🎵</span>
+  <span id="music-text">Music On</span>
+</div>
+
+<audio id="bg-music" loop autoplay>
+  <source src="audio/background.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+(function(){
+  var audio = document.getElementById('bg-music');
+  var toggle = document.getElementById('music-toggle');
+  var icon = document.getElementById('music-icon');
+  var text = document.getElementById('music-text');
+  var isPlaying = true;
+  
+  audio.volume = 0.2;
+  
+  toggle.addEventListener('click', function() {
+    if (isPlaying) {
+      audio.pause();
+  icon.textContent = '🔇';
+      text.textContent = 'Music Off';
+    } else {
+      audio.play();
+      icon.textContent = '🎵';
+      text.textContent = 'Music On';
+    }
+    isPlaying = !isPlaying;
+  });
+  
+  icon.textContent = '🎵';
+  text.textContent = 'Music On';
+})();
+</script>
+
+<!-- SMS OPT-IN VALIDATION -->
+<script>
+(function(){
+  var form = document.getElementById('sms-form');
+  if (!form) return; // SMS card not present on this page
+  var phone = document.getElementById('sms-phone');
+  var consentMarketing = document.getElementById('sms-consent-marketing');
+  var consentInfo = document.getElementById('sms-consent-info');
+  var errorBox = document.getElementById('sms-error');
+  var successBox = document.getElementById('sms-success');
+
+  function showError(msg) {
+    errorBox.textContent = msg;
+    errorBox.style.display = 'block';
+    successBox.style.display = 'none';
+  }
+  function clearError() {
+    errorBox.style.display = 'none';
+  }
+
+  // Simple US phone formatter
+  phone.addEventListener('input', function(e) {
+    var val = e.target.value.replace(/\D/g, '');
+    if (val.length > 10) val = val.slice(0, 10);
+    var formatted = '';
+    if (val.length > 6) {
+      formatted = '(' + val.slice(0,3) + ') ' + val.slice(3,6) + '-' + val.slice(6);
+    } else if (val.length > 3) {
+      formatted = '(' + val.slice(0,3) + ') ' + val.slice(3);
+    } else if (val.length > 0) {
+      formatted = '(' + val;
+    }
+    e.target.value = formatted;
+    clearError();
+  });
+
+  form.addEventListener('submit', function(e) {
+    var digits = phone.value.replace(/\D/g, '');
+    if (digits.length !== 10) {
+      e.preventDefault();
+      showError('Please enter a valid 10-digit U.S. phone number.');
+      phone.focus();
+      return;
+    }
+    if (!consentMarketing.checked && !consentInfo.checked) {
+      e.preventDefault();
+      showError('You must agree to receive at least one type of text message (Marketing or Informational) before subscribing.');
+      consentMarketing.focus();
+      return;
+    }
+    clearError();
+    // Let FormSubmit handle the POST; show success on return if needed
+  });
+
+  // If returning from FormSubmit with success param
+  if (window.location.search.indexOf('success=sms') !== -1) {
+    form.style.display = 'none';
+    successBox.style.display = 'block';
+  }
+})();
+</script>
+
+<!-- APP SHOWCASE CAROUSEL -->
+<script>
+(function(){
+  const apps = [
+    {
+      title: "Ledger First Amanda",
+      desc: "Your mobile-first bookkeeping companion. Track transactions, manage clients, upload documents, and generate reports with intuitive tab navigation and a slick, modern UI.",
+      img: "images/amanda.png",
+      tags: [{text:"Mobile First", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/amanda.html"
+    },
+    {
+      title: "Ledger First Manny",
+      desc: "Helps small businesses manage finances with clarity and speed. Intuitive navigation, voice-powered commands, offline speech recognition, and secure data handling.",
+      img: "images/Manny.png",
+      tags: [{text:"Voice Powered", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/manny.html"
+    },
+    {
+      title: "Ledger First Non-Profit",
+      desc: "A focused, modern experience for small organizations: clear dashboard, ledger tracking, grants and donor management, volunteer coordination, and a handy calendar.",
+      img: "images/bk2.png",
+      tags: [{text:"Non-Profit", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/nonprofit.html"
+    },
+    {
+      title: "Ledger First Retro",
+      desc: "Manage ledgers with a clean, nostalgic interface. Quick performance, simple navigation, offline-first operation, and reliable data integrity across sessions.",
+      img: "images/LedgerFirstRetroIcon.png",
+      tags: [{text:"Offline First", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/retro.html"
+    },
+    {
+      title: "Ledger First Warehouse",
+      desc: "Centralizes inventory, shipments, ledger entries, contacts, and sales insights in a clean, mobile-first experience. Intuitive tab layout and camera attachments.",
+      img: "images/LedgerFirstwarehouse.png",
+      tags: [{text:"Inventory", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/warehouse.html"
+    },
+    {
+      title: "Ledger First One",
+      desc: "Server-first data, offline caching, and clear paywall gating. Fast invoice and client management with bank sync via Plaid sandbox integration.",
+      img: "images/LedgerFirstFeture.png",
+      tags: [{text:"Bank Sync", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/one.html"
+    },
+    {
+      title: "Ledger First Kids",
+      desc: "Financial literacy through chores, savings, simple investments, and playful business scenarios. Colorful design and progress tracking. Completely free.",
+      img: "images/ledgerfirstkids3.png",
+      tags: [{text:"Education", cls:""},{text:"Free", cls:"free"}],
+      link: "checkout/kids.html"
+    },
+    {
+      title: "Ledger First Pro X",
+      desc: "Workflows for small teams with intuitive navigation, secure local-first data, and fast search across clients, documents, and forms.",
+      img: "images/pro_x1.png",
+      tags: [{text:"Team Ready", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/prox.html"
+    },
+    {
+      title: "Ledger First Express",
+      desc: "Natural voice commands for recording expenses and income, immediate balance checks, budget analysis, category breakdowns, and upcoming-bill reminders.",
+      img: "images/express2.png",
+      tags: [{text:"Voice First", cls:""},{text:"Paid", cls:"price"}],
+      link: "checkout/express.html"
+    },
+    {
+      title: "Ledger First Voice",
+      desc: "Hands-free data entry, quick expense capture, smart categorization, and seamless navigation via voice. Reduces admin time and improves accessibility.",
+      img: "images/Screenshot_20250728-174144.png",
+      tags: [{text:"Accessibility", cls:""},{text:"Free", cls:"free"}],
+      link: "checkout/voice.html"
+    }
+  ];
+
+  let current = 0;
+  let autoInterval;
+  const card = document.getElementById('showcaseCard');
+  const img = document.getElementById('showcaseImg');
+  const title = document.getElementById('showcaseTitle');
+  const desc = document.getElementById('showcaseDesc');
+  const tagsWrap = document.getElementById('showcaseTags');
+  const btn = document.getElementById('showcaseBtn');
+  const dotsWrap = document.getElementById('showcaseDots');
+
+  function render(index) {
+    const app = apps[index];
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(-20px)';
+    setTimeout(function(){
+      img.src = app.img;
+      img.alt = app.title;
+      title.textContent = app.title;
+      desc.textContent = app.desc;
+      btn.href = app.link;
+      tagsWrap.innerHTML = app.tags.map(function(t){
+        return '<span class="tag ' + t.cls + '"\u003e' + t.text + '</span\u003e';
+      }).join('');
+      card.style.opacity = '1';
+      card.style.transform = 'translateX(0)';
+    }, 200);
+    document.querySelectorAll('.showcase-dots .dot').forEach(function(d, i){
+      d.classList.toggle('active', i === index);
+    });
+  }
+
+  function createDots() {
+    dotsWrap.innerHTML = '';
+    apps.forEach(function(_, i){
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', function(){
+        current = i;
+        render(current);
+        resetAuto();
+      });
+      dotsWrap.appendChild(dot);
+    });
+  }
+
+  function next() {
+    current = (current + 1) % apps.length;
+    render(current);
+  }
+  function prev() {
+    current = (current - 1 + apps.length) % apps.length;
+    render(current);
+  }
+  function resetAuto() {
+    clearInterval(autoInterval);
+    autoInterval = setInterval(next, 5000);
+  }
+
+  document.getElementById('showcaseNext').addEventListener('click', function(){
+    next();
+    resetAuto();
+  });
+  document.getElementById('showcasePrev').addEventListener('click', function(){
+    prev();
+    resetAuto();
+  });
+
+  createDots();
+  render(0);
+  autoInterval = setInterval(next, 5000);
+})();
+</script>
+
+</body></html>
