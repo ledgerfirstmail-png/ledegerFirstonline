@@ -426,6 +426,7 @@
     transform:translateY(0);
   }
 
+  @media(max-width:1200px){ nav .links { display:none; } }
   @media(max-width:768px){
     nav { padding:14px 20px; }
     nav .links { display:none; }
@@ -453,8 +454,8 @@
 <!-- FLOATING NAV -->
 <div class="floating-nav" id="floatingNav">
   <div class="floating-nav-drag-handle"></div>
-  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Menu">
-    <img src="images/LedgerFirstFeture.png" alt="Menu">
+  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Open navigation menu" aria-expanded="false">
+    <span aria-hidden="true" style="font-size:25px; line-height:1; color:#0a0a0f;">&#9776;</span>
   </button>
   <div class="floating-nav-dropdown" id="floatingNavDropdown">
     <a href="index.html">Home</a>
@@ -753,6 +754,28 @@
     form.style.display = 'none';
     successBox.style.display = 'block';
   }
+})();
+</script>
+
+<script>
+(function() {
+  var nav = document.getElementById('floatingNav');
+  var toggle = document.getElementById('floatingNavToggle');
+  var dropdown = document.getElementById('floatingNavDropdown');
+
+  toggle.addEventListener('click', function() {
+    var isOpen = dropdown.classList.toggle('active');
+    this.setAttribute('aria-expanded', String(isOpen));
+    this.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+  });
+
+  document.addEventListener('click', function(event) {
+    if (!nav.contains(event.target)) {
+      dropdown.classList.remove('active');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open navigation menu');
+    }
+  });
 })();
 </script>
 

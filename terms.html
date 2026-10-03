@@ -221,6 +221,7 @@
     transform:translateY(0);
   }
 
+  @media(max-width:1200px){ nav .links { display:none; } }
   @media(max-width:768px){
     nav { padding:14px 20px; }
     nav .links { display:none; }
@@ -247,8 +248,8 @@
 <!-- FLOATING NAV -->
 <div class="floating-nav" id="floatingNav">
   <div class="floating-nav-drag-handle"></div>
-  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Menu">
-    <img src="images/LedgerFirstFeture.png" alt="Menu">
+  <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Open navigation menu">
+    <span aria-hidden="true" style="font-size:25px; line-height:1; color:#0a0a0f;">&#9776;</span>
   </button>
   <div class="floating-nav-dropdown" id="floatingNavDropdown">
     <a href="index.html">Home</a>
@@ -481,13 +482,16 @@
   var saved = localStorage.getItem('floatingNavPos');
   if (saved) {
     var pos = JSON.parse(saved);
-    nav.style.left = pos.left + 'px';
-    nav.style.top = pos.top + 'px';
+    var maxLeft = Math.max(0, window.innerWidth - nav.offsetWidth);
+    var maxTop = Math.max(0, window.innerHeight - nav.offsetHeight);
+    nav.style.left = Math.max(0, Math.min(Number(pos.left) || 0, maxLeft)) + 'px';
+    nav.style.top = Math.max(0, Math.min(Number(pos.top) || 0, maxTop)) + 'px';
     nav.style.right = 'auto';
   }
 
   function onPointerDown(e) {
     if (e.target.closest('.floating-nav-dropdown')) return;
+    if (e.target.closest('.floating-nav-toggle')) { hasMoved = false; return; }
     isDragging = true;
     hasMoved = false;
     var rect = nav.getBoundingClientRect();
