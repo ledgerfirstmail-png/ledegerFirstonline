@@ -523,7 +523,7 @@
 <div class="floating-nav" id="floatingNav">
   <div class="floating-nav-drag-handle"></div>
   <button class="floating-nav-toggle" id="floatingNavToggle" aria-label="Open navigation menu">
-    <span aria-hidden="true" style="font-size:25px; line-height:1; color:#0a0a0f;">&#9776;</span>
+    <img src="images/LedgerFirstFeture.png" alt="Menu">
   </button>
   <div class="floating-nav-dropdown" id="floatingNavDropdown">
     <a href="index.html" class="active">Home</a>
@@ -792,15 +792,6 @@
   var hasMoved = false;
 
   // Restore saved position
-  var saved = localStorage.getItem('floatingNavPos');
-  if (saved) {
-    var pos = JSON.parse(saved);
-    var maxLeft = Math.max(0, window.innerWidth - nav.offsetWidth);
-    var maxTop = Math.max(0, window.innerHeight - nav.offsetHeight);
-    nav.style.left = Math.max(0, Math.min(Number(pos.left) || 0, maxLeft)) + 'px';
-    nav.style.top = Math.max(0, Math.min(Number(pos.top) || 0, maxTop)) + 'px';
-    nav.style.right = 'auto';
-  }
 
   function onPointerDown(e) {
     if (e.target.closest('.floating-nav-dropdown')) return;
@@ -840,8 +831,6 @@
     if (!isDragging) return;
     isDragging = false;
     nav.style.cursor = 'grab';
-    var rect = nav.getBoundingClientRect();
-    localStorage.setItem('floatingNavPos', JSON.stringify({left: rect.left, top: rect.top}));
   }
 
   nav.addEventListener('mousedown', onPointerDown);
