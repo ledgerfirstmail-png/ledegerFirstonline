@@ -1,3 +1,5 @@
 ﻿.playwright-mcp/
 .venv/
 *.log
+_deleted_call-out-buddy-portal/
+_empty_dir/
